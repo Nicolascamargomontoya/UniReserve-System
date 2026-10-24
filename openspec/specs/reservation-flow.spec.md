@@ -12,6 +12,7 @@ Handles the end-to-end process of requesting, validating, and managing academic 
 - **REQ-RES-06:** The system shall assign a "Pending" status to all new requests.
 - **REQ-RES-07:** The system shall allow the reservation to be updated to "Approved" or "Rejected" by an administrator.
 - **REQ-RES-08:** The system shall allow users to view their reservation history and current status.
+- **REQ-RES-09:** The system shall prevent any single reservation from exceeding a duration of four (4) consecutive hours.
 
 ## Restrictions
 - **RES-RES-01:** Reservations cannot overlap by even one minute.
@@ -32,3 +33,8 @@ Handles the end-to-end process of requesting, validating, and managing academic 
 **Given** a user requesting a reservation
 **When** they set the end time before the start time
 **Then** the system returns a "Invalid time range" error.
+
+### Scenario 4: Reservation Exceeding 4 Hours
+**Given** a user requesting a reservation
+**When** the duration between start time and end time is greater than 4 hours (e.g., 10:00 to 15:00)
+**Then** the system rejects the request with a "Reservation cannot exceed 4 consecutive hours" error.

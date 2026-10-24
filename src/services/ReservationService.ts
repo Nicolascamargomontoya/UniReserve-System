@@ -11,6 +11,12 @@ export class ReservationService {
     if (start >= end) throw new Error('End time must be after start time');
     if (start < new Date()) throw new Error('Start time must be in the future');
 
+    // Rule: Maximum 4 consecutive hours
+    const durationHours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+    if (durationHours > 4) {
+      throw new Error('Reservation cannot exceed 4 consecutive hours');
+    }
+
     const space = await this.spaceRepo.findById(spaceId);
     if (!space) throw new Error('Space not found');
     if (!space.isActive) throw new Error('Space is currently inactive');
