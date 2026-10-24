@@ -4,11 +4,14 @@ import { MutexPorClave, type Exclusion } from './compartido/mutex-por-clave.js';
 import { relojDelSistema, type Reloj } from './compartido/reloj.js';
 import type { Repositorios } from './repositorios/contratos.js';
 import { crearRepositoriosEnMemoria } from './repositorios/en-memoria.js';
+import { ServicioDisponibilidad } from './modulos/disponibilidad/servicio-disponibilidad.js';
 import { ServicioEspacios } from './modulos/gestion-espacios/servicio-espacios.js';
 import { HashContrasenas } from './modulos/gestion-usuarios/hash-contrasenas.js';
 import { ServicioAutenticacion } from './modulos/gestion-usuarios/servicio-autenticacion.js';
 import { ServicioUsuarios } from './modulos/gestion-usuarios/servicio-usuarios.js';
+import { GuardiaConflictos } from './modulos/prevencion-conflictos/guardia-conflictos.js';
 import { ServicioRoles } from './modulos/roles-permisos/servicio-roles.js';
+import { ServicioSolicitudes } from './modulos/solicitudes-reserva/servicio-solicitudes.js';
 
 export interface OpcionesContenedor {
   configuracion: Pick<Configuracion, 'jwtSecreto' | 'jwtDuracionSegundos' | 'rondasBcrypt'>;
@@ -35,8 +38,17 @@ export function crearContenedor(opciones: OpcionesContenedor) {
   const roles = new ServicioRoles(repositorios.usuarios, usuarios);
   // M1 — Espacios
   const espacios = new ServicioEspacios(repositorios.espacios, reloj);
+  // M5 — Disponibilidad y M6 — Prevención de reservas simultáneas
+  const disponibilidad = new ServicioDisponibilidad(repositorios.reservas, espacios);
+  const guardia = new GuardiaConflictos(repositorios.reservas, exclusion);
+  // M4 — Solicitudes de reserva
+  const solicitudes = new ServicioSolicitudes(repositorios.reservas, espacios, disponibilidad, guardia, reloj);
 
-  return { reloj, exclusion, repositorios, servicios: { usuarios, autenticacion, roles, espacios } };
+  return {
+    reloj,
+    repositorios,
+    servicios: { usuarios, autenticacion, roles, espacios, disponibilidad, guardia, solicitudes },
+  };
 }
 
 export type Contenedor = ReturnType<typeof crearContenedor>;

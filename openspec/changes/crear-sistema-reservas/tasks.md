@@ -31,13 +31,13 @@ Cada tarea indica el requisito que implementa y cómo se verifica. Un grupo se c
 
 ## 4. Motor de reservas (Incremento 3): solicitudes-reserva, disponibilidad y prevencion-conflictos
 
-- [ ] 4.1 Modelo de reserva, máquina de estados (D8) y repositorio con filtro por solapamiento; verificar con `pruebas/unitarias/estados-reserva.test.ts`.
-- [ ] 4.2 Servicio de disponibilidad (disponibilidad: Definición de disponibilidad; Validación de disponibilidad al solicitar); verificar con sus escenarios en `pruebas/disponibilidad.test.ts`.
-- [ ] 4.3 Guardia de conflictos con mutex `[espacio, usuario]`, duplicados y exclusividad del solicitante (prevencion-conflictos); verificar con sus escenarios en `pruebas/prevencion-conflictos.test.ts`.
-- [ ] 4.4 Creación de solicitudes con el orden de validación D6 (solicitudes-reserva, todos los requisitos); verificar con sus escenarios en `pruebas/solicitudes-reserva.test.ts`.
-- [ ] 4.5 Consulta de ocupación y búsqueda de espacios disponibles; verificar con sus escenarios.
-- [ ] 4.6 Prueba de mutación: desactivar temporalmente el mutex y comprobar que las pruebas de concurrencia fallan; registrar el resultado en `revision.md`.
-- [ ] 4.7 roles-permisos: escenario "El administrador intenta crear una solicitud"; verificar con su prueba.
+- [x] 4.1 Modelo de reserva, máquina de estados (D8) y repositorio con filtro por solapamiento; verificar con `pruebas/unitarias/estados-reserva.test.ts`.
+- [x] 4.2 Servicio de disponibilidad (disponibilidad: Definición de disponibilidad; Validación de disponibilidad al solicitar); verificar con sus escenarios en `pruebas/disponibilidad.test.ts`.
+- [x] 4.3 Guardia de conflictos con mutex `[espacio, usuario]`, duplicados y exclusividad del solicitante (prevencion-conflictos); verificar con sus escenarios en `pruebas/prevencion-conflictos.test.ts`.
+- [x] 4.4 Creación de solicitudes con el orden de validación D6 (solicitudes-reserva, todos los requisitos); verificar con sus escenarios en `pruebas/solicitudes-reserva.test.ts`.
+- [x] 4.5 Consulta de ocupación y búsqueda de espacios disponibles; verificar con sus escenarios.
+- [x] 4.6 Prueba de mutación: desactivar temporalmente el mutex y comprobar que las pruebas de concurrencia fallan; registrar el resultado en `revision.md`.
+- [x] 4.7 roles-permisos: escenario "El administrador intenta crear una solicitud"; verificar con su prueba.
 
 ## 5. Gestión y trazabilidad (Incremento 4): aprobacion-reservas y cancelacion-historial
 

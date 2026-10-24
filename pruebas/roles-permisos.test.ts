@@ -41,6 +41,18 @@ describe('roles-permisos › Permisos de los solicitantes', () => {
   });
 });
 
+describe('roles-permisos › Permisos del administrador', () => {
+  it('El administrador intenta crear una solicitud', async () => {
+    const entorno = await crearEntornoDePrueba();
+    const lab = await entorno.crearEspacio({ nombre: 'Lab 1' });
+
+    const respuesta = await entorno.solicitar(entorno.admin.token, { espacioId: lab.id });
+
+    expect(respuesta.status).toBe(403);
+    expect(respuesta.body.error.codigo).toBe('ACCESO_DENEGADO');
+  });
+});
+
 describe('roles-permisos › Autenticación obligatoria', () => {
   it('Petición sin token', async () => {
     const { api } = await crearEntornoDePrueba();

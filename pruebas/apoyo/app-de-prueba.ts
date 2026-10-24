@@ -2,7 +2,8 @@
 import request from 'supertest';
 import { crearApp } from '../../src/app.js';
 import { crearContenedor, type OpcionesContenedor } from '../../src/contenedor.js';
-import type { Espacio, Rol, UsuarioPublico } from '../../src/dominio/modelos.js';
+import { transicionar } from '../../src/dominio/estados-reserva.js';
+import type { Espacio, EstadoReserva, Rol, UsuarioPublico } from '../../src/dominio/modelos.js';
 
 export const AHORA = '2030-01-07T08:00:00Z';
 export const ADMIN = { correo: 'admin@uni.edu', contrasena: 'Admin12345', nombreCompleto: 'Administración de espacios' };
@@ -75,6 +76,18 @@ export async function crearEntornoDePrueba({ sembrarAdministrador = true, ...opc
     return respuesta.body as Espacio;
   }
 
+  // Envía una solicitud; por defecto de 10:00 a 12:00 del 2030-01-07 para 10 asistentes.
+  function solicitar(token: string, datos: Record<string, unknown>) {
+    return como(token).post('/reservas', { inicio: h('10:00'), fin: h('12:00'), proposito: 'Práctica de laboratorio', asistentes: 10, ...datos });
+  }
+
+  // Lleva una reserva a otro estado directamente en el almacén (para preparar el "DADO" de un escenario).
+  async function forzarEstado(reservaId: string, estado: EstadoReserva): Promise<void> {
+    const reserva = await contenedor.repositorios.reservas.buscarPorId(reservaId);
+    if (!reserva) throw new Error(`No existe la reserva ${reservaId}`);
+    await contenedor.repositorios.reservas.actualizar(transicionar(reserva, estado, administrador?.usuario.id ?? 'sistema', reloj.ahora()));
+  }
+
   return {
     app,
     api,
@@ -84,6 +97,8 @@ export async function crearEntornoDePrueba({ sembrarAdministrador = true, ...opc
     iniciarSesion,
     registrar,
     crearEspacio,
+    solicitar,
+    forzarEstado,
     get admin() {
       if (!administrador) throw new Error('El entorno se creó sin administrador.');
       return { ...como(administrador.token), ...administrador };

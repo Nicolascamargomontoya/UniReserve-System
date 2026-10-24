@@ -1,10 +1,12 @@
 // Adaptadores en memoria. Guardan y devuelven copias para que nadie modifique el estado
 // sin pasar por `actualizar`, como ocurriría con una base de datos (design.md D10).
-import { normalizarNombre, type Espacio, type Usuario } from '../dominio/modelos.js';
+import { normalizarNombre, type Espacio, type Reserva, type Usuario } from '../dominio/modelos.js';
 import type {
   FiltroEspacios,
+  FiltroReservas,
   FiltroUsuarios,
   RepositorioEspacios,
+  RepositorioReservas,
   Repositorios,
   RepositorioUsuarios,
 } from './contratos.js';
@@ -62,6 +64,25 @@ export class RepositorioEspaciosEnMemoria extends AlmacenEnMemoria<Espacio> impl
   }
 }
 
+export class RepositorioReservasEnMemoria extends AlmacenEnMemoria<Reserva> implements RepositorioReservas {
+  async listar({ usuarioId, espacioId, estados, desde, hasta }: FiltroReservas = {}): Promise<Reserva[]> {
+    return this.todos()
+      .filter(
+        (reserva) =>
+          (usuarioId === undefined || reserva.usuarioId === usuarioId) &&
+          (espacioId === undefined || reserva.espacioId === espacioId) &&
+          (estados === undefined || estados.includes(reserva.estado)) &&
+          (desde === undefined || reserva.fin.getTime() > desde.getTime()) &&
+          (hasta === undefined || reserva.inicio.getTime() < hasta.getTime()),
+      )
+      .sort((a, b) => a.inicio.getTime() - b.inicio.getTime() || a.creadaEn.getTime() - b.creadaEn.getTime());
+  }
+}
+
 export function crearRepositoriosEnMemoria(): Repositorios {
-  return { usuarios: new RepositorioUsuariosEnMemoria(), espacios: new RepositorioEspaciosEnMemoria() };
+  return {
+    usuarios: new RepositorioUsuariosEnMemoria(),
+    espacios: new RepositorioEspaciosEnMemoria(),
+    reservas: new RepositorioReservasEnMemoria(),
+  };
 }

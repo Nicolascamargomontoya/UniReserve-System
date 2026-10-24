@@ -1,5 +1,5 @@
 // Contratos de acceso a datos. Los servicios solo dependen de estas interfaces (plan §3.3).
-import type { Espacio, Rol, TipoEspacio, Usuario } from '../dominio/modelos.js';
+import type { Espacio, EstadoReserva, Reserva, Rol, TipoEspacio, Usuario } from '../dominio/modelos.js';
 
 export interface FiltroUsuarios {
   rol?: Rol;
@@ -29,7 +29,24 @@ export interface RepositorioEspacios {
   listar(filtro?: FiltroEspacios): Promise<Espacio[]>;
 }
 
+// `desde`/`hasta` seleccionan las reservas que se solapan con [desde, hasta).
+export interface FiltroReservas {
+  usuarioId?: string;
+  espacioId?: string;
+  estados?: readonly EstadoReserva[];
+  desde?: Date;
+  hasta?: Date;
+}
+
+export interface RepositorioReservas {
+  insertar(reserva: Reserva): Promise<void>;
+  actualizar(reserva: Reserva): Promise<void>;
+  buscarPorId(id: string): Promise<Reserva | null>;
+  listar(filtro?: FiltroReservas): Promise<Reserva[]>;
+}
+
 export interface Repositorios {
   usuarios: RepositorioUsuarios;
   espacios: RepositorioEspacios;
+  reservas: RepositorioReservas;
 }

@@ -42,3 +42,31 @@ export interface Espacio {
 export function normalizarNombre(nombre: string): string {
   return nombre.trim().toLocaleLowerCase('es');
 }
+
+export const ESTADOS_RESERVA = ['PENDIENTE', 'APROBADA', 'RECHAZADA', 'CANCELADA'] as const;
+export type EstadoReserva = (typeof ESTADOS_RESERVA)[number];
+
+// Reservas que ocupan la franja: primero en llegar, primero en ser atendido (RN-07).
+export const ESTADOS_ACTIVOS: readonly EstadoReserva[] = ['PENDIENTE', 'APROBADA'];
+
+export interface CambioEstado {
+  estadoAnterior: EstadoReserva | null;
+  estadoNuevo: EstadoReserva;
+  autorId: string;
+  fecha: Date;
+  motivo?: string;
+}
+
+export interface Reserva {
+  id: string;
+  espacioId: string;
+  usuarioId: string;
+  inicio: Date;
+  fin: Date;
+  proposito: string;
+  asistentes: number;
+  estado: EstadoReserva;
+  creadaEn: Date;
+  actualizadaEn: Date;
+  historial: CambioEstado[];
+}

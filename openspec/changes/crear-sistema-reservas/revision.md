@@ -75,4 +75,12 @@ Ninguna regla del plan quedó sin requisito, y ningún requisito introduce funci
 
 ## 6. Resultado de la prueba de mutación (tarea 4.6)
 
-_Pendiente: se completa durante la implementación del incremento 3._
+Ejecutada el 2026-10-24 durante el incremento 3.
+
+| Paso | Resultado |
+| :--- | :--- |
+| Suite de `prevencion-conflictos` con el mutex activo, repetida 8 veces con un repositorio con latencia artificial | 6/6 pruebas en verde en las 8 ejecuciones |
+| Mutación: `GuardiaConflictos.ejecutarExclusivo` ejecuta la operación sin adquirir claves | **Fallan** "Cinco solicitudes simultáneas por la misma franja" y "Solicitudes simultáneas del mismo usuario en espacios distintos" |
+| Código restaurado | Suite de nuevo en verde |
+
+Conclusión: las pruebas de concurrencia detectan la ausencia del mutex. Para que esta evidencia quede automatizada se agregó la prueba de control "control: sin mutex por clave la misma franja se asigna más de una vez", que inyecta una exclusión vacía y verifica que se producen dobles reservas.
