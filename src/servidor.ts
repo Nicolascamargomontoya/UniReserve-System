@@ -9,6 +9,9 @@ const { configuracion, advertencias } = cargarConfiguracion();
 for (const advertencia of advertencias) console.warn(`[advertencia] ${advertencia}`);
 
 const contenedor = crearContenedor({ configuracion });
+if (await contenedor.servicios.roles.asegurarAdministradorInicial(configuracion.administradorInicial)) {
+  console.log(`Administrador inicial creado: ${configuracion.administradorInicial.correo}`);
+}
 
 crearApp(contenedor).listen(configuracion.puerto, () => {
   console.log(`UniReserve escuchando en http://localhost:${configuracion.puerto}`);

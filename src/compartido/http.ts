@@ -1,4 +1,4 @@
-import type { ErrorRequestHandler, RequestHandler } from 'express';
+import type { ErrorRequestHandler, Request, RequestHandler } from 'express';
 import { ErrorAplicacion } from './errores.js';
 
 export const rutaNoEncontrada: RequestHandler = (peticion) => {
@@ -20,3 +20,9 @@ export const manejadorDeErrores: ErrorRequestHandler = (error, _peticion, respue
   console.error(error);
   respuesta.status(500).json({ error: { codigo: 'ERROR_INTERNO', mensaje: 'Ocurrió un error inesperado.' } });
 };
+
+export function idDeRuta(peticion: Request): string {
+  const id = peticion.params.id;
+  if (typeof id !== 'string') throw new ErrorAplicacion('DATOS_INVALIDOS', 'Falta el identificador en la ruta.');
+  return id;
+}

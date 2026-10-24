@@ -1,11 +1,22 @@
 import express, { type Express } from 'express';
 import type { Contenedor } from './contenedor.js';
 import { manejadorDeErrores, rutaNoEncontrada } from './compartido/http.js';
+import { rutasAutenticacion, rutasUsuarios } from './modulos/gestion-usuarios/rutas-usuarios.js';
+import { autenticar } from './modulos/roles-permisos/middleware-acceso.js';
+import { rutasRoles } from './modulos/roles-permisos/rutas-roles.js';
 
-export function crearApp(_contenedor: Contenedor): Express {
+export function crearApp({ servicios }: Contenedor): Express {
   const app = express();
   app.disable('x-powered-by');
   app.use(express.json());
+
+  // Públicas: registro e inicio de sesión.
+  app.use(rutasAutenticacion(servicios));
+
+  // Todo lo demás exige token (roles-permisos: Autenticación obligatoria).
+  app.use(autenticar(servicios.autenticacion));
+  app.use(rutasUsuarios(servicios));
+  app.use(rutasRoles(servicios));
 
   app.use(rutaNoEncontrada);
   app.use(manejadorDeErrores);

@@ -13,13 +13,13 @@ Cada tarea indica el requisito que implementa y cómo se verifica. Un grupo se c
 
 ## 2. Identidad (Incremento 1): gestion-usuarios y roles-permisos
 
-- [ ] 2.1 Modelo de usuario, repositorio en memoria con correo normalizado y hash de contraseñas (gestion-usuarios: Almacenamiento seguro de contraseñas); verificar con su escenario en `pruebas/gestion-usuarios.test.ts`.
-- [ ] 2.2 Registro y validación de datos (Registro de cuentas; Validación de los datos de registro); verificar con sus escenarios.
-- [ ] 2.3 Inicio de sesión con JWT firmado con el reloj inyectado (Autenticación); verificar con sus escenarios.
-- [ ] 2.4 Matriz de permisos y middleware `autenticar`/`autorizar` (roles-permisos: Roles del sistema; Autenticación obligatoria); verificar con sus escenarios en `pruebas/roles-permisos.test.ts`.
-- [ ] 2.5 Perfil propio y administración de cuentas (Perfil propio; Administración de cuentas); verificar con sus escenarios.
-- [ ] 2.6 Asignación de roles y protección del acceso administrativo; verificar con sus escenarios.
-- [ ] 2.7 Administrador inicial al arrancar (Administrador inicial); verificar con sus escenarios.
+- [x] 2.1 Modelo de usuario, repositorio en memoria con correo normalizado y hash de contraseñas (gestion-usuarios: Almacenamiento seguro de contraseñas); verificar con su escenario en `pruebas/gestion-usuarios.test.ts`.
+- [x] 2.2 Registro y validación de datos (Registro de cuentas; Validación de los datos de registro); verificar con sus escenarios.
+- [x] 2.3 Inicio de sesión con JWT firmado con el reloj inyectado (Autenticación); verificar con sus escenarios.
+- [x] 2.4 Matriz de permisos y middleware `autenticar`/`autorizar` (roles-permisos: Roles del sistema; Autenticación obligatoria); verificar con sus escenarios en `pruebas/roles-permisos.test.ts`.
+- [x] 2.5 Perfil propio y administración de cuentas (Perfil propio; Administración de cuentas) y roles-permisos: "Un estudiante intenta listar las cuentas"; verificar con sus escenarios.
+- [x] 2.6 Asignación de roles y protección del acceso administrativo; verificar con sus escenarios.
+- [x] 2.7 Administrador inicial al arrancar (Administrador inicial); verificar con sus escenarios.
 
 ## 3. Catálogo (Incremento 2): gestion-espacios
 
@@ -27,7 +27,7 @@ Cada tarea indica el requisito que implementa y cómo se verifica. Un grupo se c
 - [ ] 3.2 Registro y edición de espacios (Registro de espacios; Edición de espacios); verificar con sus escenarios.
 - [ ] 3.3 Activación y desactivación sin borrado (Activación y desactivación de espacios); verificar con sus escenarios, salvo "Las reservas existentes se conservan", que se completa en la tarea 5.2.
 - [ ] 3.4 Consulta del catálogo con filtros y visibilidad por rol (Consulta del catálogo); verificar con sus escenarios.
-- [ ] 3.5 roles-permisos: escenarios "Un estudiante intenta registrar un espacio" y "Un estudiante intenta listar las cuentas"; verificar con sus pruebas.
+- [ ] 3.5 roles-permisos: escenario "Un estudiante intenta registrar un espacio"; verificar con su prueba.
 
 ## 4. Motor de reservas (Incremento 3): solicitudes-reserva, disponibilidad y prevencion-conflictos
 

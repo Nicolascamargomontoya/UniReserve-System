@@ -4,7 +4,7 @@ import { crearEntornoDePrueba } from '../apoyo/app-de-prueba.js';
 
 describe('aplicación HTTP: contrato de errores', () => {
   it('responde 400 DATOS_INVALIDOS ante un cuerpo que no es JSON válido', async () => {
-    const { api } = crearEntornoDePrueba();
+    const { api } = await crearEntornoDePrueba();
 
     const respuesta = await api.post('/auth/registro').set('Content-Type', 'application/json').send('{"correo":');
 
@@ -12,10 +12,19 @@ describe('aplicación HTTP: contrato de errores', () => {
     expect(respuesta.body.error.codigo).toBe('DATOS_INVALIDOS');
   });
 
-  it('responde 404 RUTA_NO_ENCONTRADA ante una ruta inexistente', async () => {
-    const { api } = crearEntornoDePrueba();
+  it('responde 400 DATOS_INVALIDOS si el cuerpo JSON no es un objeto', async () => {
+    const { api } = await crearEntornoDePrueba();
 
-    const respuesta = await api.get('/no-existe');
+    const respuesta = await api.post('/auth/registro').send([1, 2]);
+
+    expect(respuesta.status).toBe(400);
+    expect(respuesta.body.error.codigo).toBe('DATOS_INVALIDOS');
+  });
+
+  it('responde 404 RUTA_NO_ENCONTRADA ante una ruta inexistente', async () => {
+    const entorno = await crearEntornoDePrueba();
+
+    const respuesta = await entorno.admin.get('/no-existe');
 
     expect(respuesta.status).toBe(404);
     expect(respuesta.body.error.codigo).toBe('RUTA_NO_ENCONTRADA');

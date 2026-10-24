@@ -64,6 +64,15 @@ export function correo(datos: Datos, campo: string): string {
   return valor;
 }
 
+// La contraseña no se recorta: los espacios forman parte de ella. bcrypt solo usa los primeros 72 bytes.
+export function contrasena(datos: Datos, campo: string): string {
+  const valor = datos[campo];
+  if (typeof valor !== 'string' || valor.length < 8 || valor.length > 72) {
+    throw datosInvalidos(campo, 'debe tener entre 8 y 72 caracteres');
+  }
+  return valor;
+}
+
 // Instante ISO-8601 con zona horaria explícita (solicitudes-reserva: Formato de fechas con zona horaria).
 export function fechaHora(datos: Datos, campo: string): Date {
   const valor = datos[campo];
