@@ -1,0 +1,26 @@
+schema: spec-driven
+
+context: |
+  Language: es
+  All artifacts must be written in es.
+  Keep OpenSpec structural headings and SHALL/MUST keywords in English.
+
+  Proyecto: UniReserve, sistema de gestión de reservas de espacios académicos
+  (laboratorios, auditorios y salas de cómputo) de una institución universitaria.
+  Fuente de verdad del alcance y las decisiones: PLAN_INGENIERIA.md (v2).
+  Stack: Node.js >= 22.12, TypeScript strict, Express 5, JWT + bcryptjs,
+  Vitest + Supertest. Arquitectura: monolito modular en capas; cada capacidad
+  de OpenSpec corresponde a src/modules/<capacidad>/ y a tests/<capacidad>.test.ts.
+  Roles: STUDENT, PROFESSOR (solicitantes) y ADMINISTRATOR.
+  Estados de reserva: PENDING, APPROVED, REJECTED, CANCELLED.
+  Las respuestas de error tienen la forma { error: { code, message, details? } }.
+
+rules:
+  specs:
+    - Cada escenario indica valores concretos y un resultado verificable (código HTTP, código de error o estado).
+    - Los nombres de escenario son únicos dentro de la capacidad; la prueba automatizada usa exactamente el mismo nombre.
+    - Las fechas de los escenarios usan ISO-8601 con zona horaria (UTC, sufijo Z).
+  tasks:
+    - Cada tarea cita el requisito que implementa y cómo se verifica.
+  design:
+    - Toda decisión incluye la alternativa descartada y su justificación.
