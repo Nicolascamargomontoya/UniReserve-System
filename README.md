@@ -102,7 +102,7 @@ Todas las rutas, excepto `/auth/registro` y `/auth/inicio-sesion`, exigen la cab
 | GET | `/reservas`, `/reservas/pendientes` | Administrador |
 | PATCH | `/reservas/:id/aprobar`, `/reservas/:id/rechazar` | Administrador |
 
-El detalle de cada ruta, los códigos de error y el orden de las validaciones están en [`openspec/changes/archive/*-crear-sistema-reservas/design.md`](openspec/changes/archive/).
+El detalle de cada ruta, los códigos de error y el orden de las validaciones están en [`design.md` del cambio archivado](openspec/changes/archive/2026-10-24-crear-sistema-reservas/design.md).
 
 ### Flujo de ejemplo con curl
 
