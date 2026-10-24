@@ -4,12 +4,12 @@ Cada tarea indica el requisito que implementa y cómo se verifica. Un grupo se c
 
 ## 1. Base técnica (Incremento 0)
 
-- [ ] 1.1 Reestructurar `package.json` (retirar `pg`, `uuid`, `ts-node`, `nodemon`; agregar Vitest, Supertest, tsx) y `tsconfig.json` en modo strict; verificar con `npm install` y `npm run tipos`.
-- [ ] 1.2 Eliminar el código de la iteración 1 (`src/controllers`, `src/services`, `src/middleware`, `src/models`, `src/repositories`, `src/index.ts`, `tests/`); verificar que `npm run tipos` no encuentra referencias.
-- [ ] 1.3 Implementar `src/compartido/` (errores tipados, validación, solapamiento y bloques, reloj, mutex por clave) según D5, D7 y D9; verificar con `pruebas/unitarias/tiempo.test.ts` y `pruebas/unitarias/mutex-por-clave.test.ts`.
-- [ ] 1.4 Implementar `configuracion.ts`, `contenedor.ts`, `app.ts` y `servidor.ts` con manejador de errores y ruta 404; verificar con `pruebas/unitarias/app.test.ts` (JSON inválido → 400, ruta inexistente → 404).
-- [ ] 1.5 Crear el arnés `pruebas/apoyo/app-de-prueba.ts` (reloj falso, administrador inicial, utilidades de registro e inicio de sesión); verificar con su uso en la prueba de la tarea 1.4.
-- [ ] 1.6 Implementar `scripts/trazabilidad.ts` (D11) y `npm run trazabilidad`; verificar que lista los escenarios del cambio y falla mientras falten pruebas.
+- [x] 1.1 Reestructurar `package.json` (retirar `pg`, `uuid`, `ts-node`, `nodemon`; agregar Vitest, Supertest, tsx) y `tsconfig.json` en modo strict; verificar con `npm install` y `npm run tipos`.
+- [x] 1.2 Eliminar el código de la iteración 1 (`src/controllers`, `src/services`, `src/middleware`, `src/models`, `src/repositories`, `src/index.ts`, `tests/`); verificar que `npm run tipos` no encuentra referencias.
+- [x] 1.3 Implementar `src/compartido/` (errores tipados, validación, solapamiento y bloques, reloj, mutex por clave) según D5, D7 y D9; verificar con `pruebas/unitarias/tiempo.test.ts` y `pruebas/unitarias/mutex-por-clave.test.ts`.
+- [x] 1.4 Implementar `configuracion.ts`, `contenedor.ts`, `app.ts` y `servidor.ts` con manejador de errores y ruta 404; verificar con `pruebas/unitarias/app.test.ts` (JSON inválido → 400, ruta inexistente → 404).
+- [x] 1.5 Crear el arnés `pruebas/apoyo/app-de-prueba.ts` (reloj falso, administrador inicial, utilidades de registro e inicio de sesión); verificar con su uso en la prueba de la tarea 1.4.
+- [x] 1.6 Implementar `scripts/trazabilidad.ts` (D11) y `npm run trazabilidad`; verificar que lista los escenarios del cambio y falla mientras falten pruebas.
 
 ## 2. Identidad (Incremento 1): gestion-usuarios y roles-permisos
 
