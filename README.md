@@ -24,6 +24,20 @@ El proyecto se desarrolló con **Spec-Driven Development (SDD) y OpenSpec**: pla
 | M7 | Aprobación y rechazo de solicitudes | `aprobacion-reservas` | `src/modulos/aprobacion-reservas/` | `pruebas/aprobacion-reservas.test.ts` |
 | M8 | Cancelación e historial de reservas | `cancelacion-historial` | `src/modulos/cancelacion-historial/` | `pruebas/cancelacion-historial.test.ts` |
 
+## Reglas de negocio principales
+
+- Las fechas van en ISO-8601 **con zona horaria** y en **bloques de 30 minutos**; solo se reserva a futuro.
+- Toda solicitud nueva queda `PENDIENTE`. Las reservas `PENDIENTE` y `APROBADA` ocupan la franja: atiende primero quien solicita primero.
+- Los intervalos son semiabiertos `[inicio, fin)`: una reserva de 10:00 a 12:00 no choca con otra de 12:00 a 14:00.
+- Un espacio no puede tener dos reservas activas solapadas, y un usuario tampoco, ni siquiera con solicitudes simultáneas.
+- Solo el administrador aprueba o rechaza (el rechazo exige motivo). El solicitante cancela antes del inicio; el administrador puede cancelar cualquier reserva indicando un motivo.
+- **CR-01 — máximo 4 horas consecutivas:** ningún usuario puede reservar un mismo espacio más de 4 horas seguidas, contando sus reservas activas contiguas en ese espacio. Exactamente 4 horas sí se permite; una pausa de 30 minutos corta la cadena.
+
+  ```json
+  HTTP 422
+  {"error":{"codigo":"LIMITE_HORAS_CONSECUTIVAS","mensaje":"Ningún usuario puede reservar un mismo espacio más de 4 horas consecutivas.","detalles":{"inicioBloque":"2030-11-03T09:00:00.000Z","finBloque":"2030-11-03T14:00:00.000Z","horas":5}}}
+  ```
+
 ## Instalación
 
 Requisitos: **Node.js 22.12 o superior** y npm.
@@ -59,7 +73,7 @@ npm start            # ejecuta la versión compilada
 ## Pruebas y verificación
 
 ```bash
-npm test                    # 140+ pruebas automatizadas (Vitest + Supertest)
+npm test                    # 152 pruebas automatizadas (Vitest + Supertest)
 npm run pruebas:cobertura   # pruebas con informe de cobertura (umbral: 85 % de líneas)
 npm run tipos               # verificación de tipos (TypeScript strict)
 npm run specs:validar       # openspec validate --all --strict

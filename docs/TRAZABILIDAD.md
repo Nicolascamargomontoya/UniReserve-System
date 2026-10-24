@@ -2,7 +2,7 @@
 
 Generada por `npm run trazabilidad -- --escribir` a partir de las especificaciones de OpenSpec y de los títulos de las pruebas. No se edita a mano.
 
-**Escenarios:** 95 · **Con prueba:** 95 · **Sin prueba:** 0
+**Escenarios:** 105 · **Con prueba:** 105 · **Sin prueba:** 0
 
 | Capacidad | Escenarios | Con prueba | Módulo |
 | :--- | ---: | ---: | :--- |
@@ -13,7 +13,7 @@ Generada por `npm run trazabilidad -- --escribir` a partir de las especificacion
 | gestion-usuarios | 17 | 17 | `src/modulos/gestion-usuarios/` |
 | prevencion-conflictos | 5 | 5 | `src/modulos/prevencion-conflictos/` |
 | roles-permisos | 15 | 15 | `src/modulos/roles-permisos/` |
-| solicitudes-reserva | 11 | 11 | `src/modulos/solicitudes-reserva/` |
+| solicitudes-reserva | 21 | 21 | `src/modulos/solicitudes-reserva/` |
 
 | Capacidad | Requisito | Escenario | Prueba | Estado |
 | :--- | :--- | :--- | :--- | :---: |
@@ -112,3 +112,13 @@ Generada por `npm run trazabilidad -- --escribir` a partir de las especificacion
 | solicitudes-reserva | Espacio válido y capacidad | Espacio inexistente | `pruebas/solicitudes-reserva.test.ts` | ✅ |
 | solicitudes-reserva | Espacio válido y capacidad | Espacio inactivo | `pruebas/solicitudes-reserva.test.ts` | ✅ |
 | solicitudes-reserva | Espacio válido y capacidad | Asistentes por encima de la capacidad | `pruebas/solicitudes-reserva.test.ts` | ✅ |
+| solicitudes-reserva | Límite de cuatro horas consecutivas | Reserva de exactamente cuatro horas | `pruebas/solicitudes-reserva.horas-consecutivas.test.ts` | ✅ |
+| solicitudes-reserva | Límite de cuatro horas consecutivas | Reserva individual de más de cuatro horas | `pruebas/solicitudes-reserva.horas-consecutivas.test.ts` | ✅ |
+| solicitudes-reserva | Límite de cuatro horas consecutivas | Encadenar después de una reserva propia | `pruebas/solicitudes-reserva.horas-consecutivas.test.ts` | ✅ |
+| solicitudes-reserva | Límite de cuatro horas consecutivas | Encadenar antes de una reserva propia | `pruebas/solicitudes-reserva.horas-consecutivas.test.ts` | ✅ |
+| solicitudes-reserva | Límite de cuatro horas consecutivas | Completar el hueco entre dos reservas propias | `pruebas/solicitudes-reserva.horas-consecutivas.test.ts` | ✅ |
+| solicitudes-reserva | Límite de cuatro horas consecutivas | Cadena de exactamente cuatro horas | `pruebas/solicitudes-reserva.horas-consecutivas.test.ts` | ✅ |
+| solicitudes-reserva | Límite de cuatro horas consecutivas | Una pausa de 30 minutos corta la cadena | `pruebas/solicitudes-reserva.horas-consecutivas.test.ts` | ✅ |
+| solicitudes-reserva | Límite de cuatro horas consecutivas | Otro espacio no se encadena | `pruebas/solicitudes-reserva.horas-consecutivas.test.ts` | ✅ |
+| solicitudes-reserva | Límite de cuatro horas consecutivas | Las reservas canceladas o rechazadas no cuentan | `pruebas/solicitudes-reserva.horas-consecutivas.test.ts` | ✅ |
+| solicitudes-reserva | Límite de cuatro horas consecutivas | Las reservas de otro usuario no se encadenan | `pruebas/solicitudes-reserva.horas-consecutivas.test.ts` | ✅ |
