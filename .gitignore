@@ -1,0 +1,11 @@
+# Dependencias y artefactos generados
+node_modules/
+dist/
+coverage/
+
+# Logs y entorno local
+*.log
+.env
+
+# Credenciales: nunca versionar
+.git-credentials
