@@ -50,8 +50,8 @@ Cada tarea indica el requisito que implementa y cómo se verifica. Un grupo se c
 
 ## 6. Verificación integral
 
-- [ ] 6.1 Ejecutar `npm run verificar` (tipos, `openspec validate --strict`, pruebas con cobertura ≥ 85 % de líneas y trazabilidad sin escenarios faltantes); verificar que termina con código 0.
-- [ ] 6.2 Recorrer el flujo completo contra el servidor real (`npm run dev` + curl: registro, espacio, solicitud, aprobación, cancelación, historial); verificar las respuestas y documentar los comandos en `README.md`.
+- [x] 6.1 Ejecutar `npm run verificar` (tipos, `openspec validate --strict`, pruebas con cobertura ≥ 85 % de líneas y trazabilidad sin escenarios faltantes); verificar que termina con código 0.
+- [x] 6.2 Recorrer el flujo completo contra el servidor real (`npm run dev` + curl: registro, espacio, solicitud, aprobación, cancelación, historial); verificar las respuestas y documentar los comandos en `README.md`.
 
 ## Workflow follow-up
 
