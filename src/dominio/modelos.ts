@@ -22,3 +22,23 @@ export interface Sesion {
   usuarioId: string;
   rol: Rol;
 }
+
+export const TIPOS_ESPACIO = ['LABORATORIO', 'AUDITORIO', 'SALA_COMPUTO'] as const;
+export type TipoEspacio = (typeof TIPOS_ESPACIO)[number];
+
+export interface Espacio {
+  id: string;
+  nombre: string;
+  tipo: TipoEspacio;
+  capacidad: number;
+  ubicacion: string;
+  equipamiento: string[];
+  activo: boolean;
+  creadoEn: Date;
+  actualizadoEn: Date;
+}
+
+// Los nombres se comparan sin distinguir mayúsculas ni espacios en los extremos (RN-01).
+export function normalizarNombre(nombre: string): string {
+  return nombre.trim().toLocaleLowerCase('es');
+}

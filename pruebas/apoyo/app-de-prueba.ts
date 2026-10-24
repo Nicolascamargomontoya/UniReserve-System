@@ -2,7 +2,7 @@
 import request from 'supertest';
 import { crearApp } from '../../src/app.js';
 import { crearContenedor, type OpcionesContenedor } from '../../src/contenedor.js';
-import type { Rol, UsuarioPublico } from '../../src/dominio/modelos.js';
+import type { Espacio, Rol, UsuarioPublico } from '../../src/dominio/modelos.js';
 
 export const AHORA = '2030-01-07T08:00:00Z';
 export const ADMIN = { correo: 'admin@uni.edu', contrasena: 'Admin12345', nombreCompleto: 'Administración de espacios' };
@@ -67,6 +67,14 @@ export async function crearEntornoDePrueba({ sembrarAdministrador = true, ...opc
 
   const administrador = sembrarAdministrador ? await iniciarSesion(ADMIN.correo, ADMIN.contrasena) : undefined;
 
+  async function crearEspacio(datos: Record<string, unknown> = {}): Promise<Espacio> {
+    consecutivo += 1;
+    const espacio = { nombre: `Espacio ${consecutivo}`, tipo: 'LABORATORIO', capacidad: 30, ubicacion: 'Bloque A', ...datos };
+    const respuesta = await como(administrador!.token).post('/espacios', espacio);
+    if (respuesta.status !== 201) throw new Error(`Creación de espacio fallida: ${JSON.stringify(respuesta.body)}`);
+    return respuesta.body as Espacio;
+  }
+
   return {
     app,
     api,
@@ -75,6 +83,7 @@ export async function crearEntornoDePrueba({ sembrarAdministrador = true, ...opc
     como,
     iniciarSesion,
     registrar,
+    crearEspacio,
     get admin() {
       if (!administrador) throw new Error('El entorno se creó sin administrador.');
       return { ...como(administrador.token), ...administrador };

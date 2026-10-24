@@ -23,11 +23,11 @@ Cada tarea indica el requisito que implementa y cómo se verifica. Un grupo se c
 
 ## 3. Catálogo (Incremento 2): gestion-espacios
 
-- [ ] 3.1 Modelo de espacio y repositorio con nombre normalizado (Nombre único de espacio); verificar con su escenario en `pruebas/gestion-espacios.test.ts`.
-- [ ] 3.2 Registro y edición de espacios (Registro de espacios; Edición de espacios); verificar con sus escenarios.
-- [ ] 3.3 Activación y desactivación sin borrado (Activación y desactivación de espacios); verificar con sus escenarios, salvo "Las reservas existentes se conservan", que se completa en la tarea 5.2.
-- [ ] 3.4 Consulta del catálogo con filtros y visibilidad por rol (Consulta del catálogo); verificar con sus escenarios.
-- [ ] 3.5 roles-permisos: escenario "Un estudiante intenta registrar un espacio"; verificar con su prueba.
+- [x] 3.1 Modelo de espacio y repositorio con nombre normalizado (Nombre único de espacio); verificar con su escenario en `pruebas/gestion-espacios.test.ts`.
+- [x] 3.2 Registro y edición de espacios (Registro de espacios; Edición de espacios); verificar con sus escenarios.
+- [x] 3.3 Activación y desactivación sin borrado (Activación y desactivación de espacios); verificar con sus escenarios, salvo "Las reservas existentes se conservan", que se completa en la tarea 5.2.
+- [x] 3.4 Consulta del catálogo con filtros y visibilidad por rol (Consulta del catálogo); verificar con sus escenarios.
+- [x] 3.5 roles-permisos: escenario "Un estudiante intenta registrar un espacio"; verificar con su prueba.
 
 ## 4. Motor de reservas (Incremento 3): solicitudes-reserva, disponibilidad y prevencion-conflictos
 

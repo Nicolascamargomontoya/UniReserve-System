@@ -15,6 +15,21 @@ describe('roles-permisos › Roles del sistema', () => {
 });
 
 describe('roles-permisos › Permisos de los solicitantes', () => {
+  it('Un estudiante intenta registrar un espacio', async () => {
+    const entorno = await crearEntornoDePrueba();
+    const estudiante = await entorno.registrar('ESTUDIANTE');
+
+    const respuesta = await entorno.como(estudiante.token).post('/espacios', {
+      nombre: 'Sala propia',
+      tipo: 'LABORATORIO',
+      capacidad: 10,
+      ubicacion: 'Bloque A',
+    });
+
+    expect(respuesta.status).toBe(403);
+    expect(respuesta.body.error.codigo).toBe('ACCESO_DENEGADO');
+  });
+
   it('Un estudiante intenta listar las cuentas', async () => {
     const entorno = await crearEntornoDePrueba();
     const estudiante = await entorno.registrar('ESTUDIANTE');

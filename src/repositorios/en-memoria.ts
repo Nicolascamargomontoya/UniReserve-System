@@ -1,7 +1,13 @@
 // Adaptadores en memoria. Guardan y devuelven copias para que nadie modifique el estado
 // sin pasar por `actualizar`, como ocurriría con una base de datos (design.md D10).
-import type { Usuario } from '../dominio/modelos.js';
-import type { FiltroUsuarios, Repositorios, RepositorioUsuarios } from './contratos.js';
+import { normalizarNombre, type Espacio, type Usuario } from '../dominio/modelos.js';
+import type {
+  FiltroEspacios,
+  FiltroUsuarios,
+  RepositorioEspacios,
+  Repositorios,
+  RepositorioUsuarios,
+} from './contratos.js';
 
 class AlmacenEnMemoria<T extends { id: string }> {
   private readonly registros = new Map<string, T>();
@@ -38,6 +44,24 @@ export class RepositorioUsuariosEnMemoria extends AlmacenEnMemoria<Usuario> impl
   }
 }
 
+export class RepositorioEspaciosEnMemoria extends AlmacenEnMemoria<Espacio> implements RepositorioEspacios {
+  async buscarPorNombre(nombre: string): Promise<Espacio | null> {
+    return this.todos().find((espacio) => normalizarNombre(espacio.nombre) === normalizarNombre(nombre)) ?? null;
+  }
+
+  async listar({ tipo, capacidadMinima, texto, incluirInactivos = false }: FiltroEspacios = {}): Promise<Espacio[]> {
+    return this.todos()
+      .filter(
+        (espacio) =>
+          (incluirInactivos || espacio.activo) &&
+          (tipo === undefined || espacio.tipo === tipo) &&
+          (capacidadMinima === undefined || espacio.capacidad >= capacidadMinima) &&
+          (texto === undefined || normalizarNombre(espacio.nombre).includes(normalizarNombre(texto))),
+      )
+      .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
+  }
+}
+
 export function crearRepositoriosEnMemoria(): Repositorios {
-  return { usuarios: new RepositorioUsuariosEnMemoria() };
+  return { usuarios: new RepositorioUsuariosEnMemoria(), espacios: new RepositorioEspaciosEnMemoria() };
 }
