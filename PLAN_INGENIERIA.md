@@ -2,7 +2,7 @@
 
 | Versión | Fecha | Estado |
 | :--- | :--- | :--- |
-| 2.1 | 2026-10-24 | Vigente. Reemplaza las versiones 1.0 (commit `0bfde05`) y 2.0 (commit `be18ac8`). Ver §7 *Control de cambios del plan*. |
+| 2.2 | 2026-10-24 | Vigente. Reemplaza las versiones 1.0 (commit `0bfde05`), 2.0 (commit `be18ac8`) y 2.1. Ver §7 *Control de cambios del plan*. |
 
 Este documento se elabora **antes** de escribir especificaciones y código. Define qué problema se resuelve, cómo se organizará la solución, qué decisiones técnicas se toman (y por qué), cómo se asegurará la calidad y cómo se usarán OpenSpec y la inteligencia artificial.
 
@@ -126,6 +126,7 @@ Estas reglas son la entrada principal para las especificaciones (ver §6.2). Cad
 | RN-10 | Solo el administrador aprueba o rechaza; el rechazo exige motivo. Solo se decide sobre solicitudes `PENDIENTE`. | M7 |
 | RN-11 | El solicitante cancela sus reservas activas antes del inicio; el administrador puede cancelar cualquiera, indicando motivo. | M8 |
 | RN-12 | Cada cambio de estado se registra (estado anterior, nuevo, autor, fecha y motivo) y no se puede modificar. | M8 |
+| RN-13 | **(CR-01)** Ningún usuario puede reservar un mismo espacio más de 4 horas consecutivas, contando sus reservas activas contiguas en ese espacio. | M4 |
 
 ### 2.5 Estrategia para desarrollar el proyecto progresivamente
 
@@ -412,3 +413,4 @@ Se usa un agente de programación (Claude Code) para:
 | 2.0 | Nuevas reglas RN-03, RN-04, RN-05, RN-07, RN-08, RN-09, RN-12 y decisiones DT-05 a DT-09. | La revisión de la iteración 1 encontró: doble reserva posible (solo `APROBADA` bloqueaba y la aprobación no revalidaba), autorregistro como administrador, secreto JWT fijo en el código, especificaciones fuera del formato OpenSpec, pruebas sin framework y funcionalidades faltantes (rechazo, cancelación, historial, administración de usuarios). |
 | 2.0 | Estrategia de calidad con trazabilidad automatizada y `npm run verificar`. | Hacer verificable el cumplimiento de requisitos. |
 | 2.1 | Todo el proyecto en español: capacidades de OpenSpec, carpetas (`src/modulos/`, `pruebas/`), rutas de la API (`/espacios`, `/reservas`, `/usuarios`), roles (`ESTUDIANTE`, `PROFESOR`, `ADMINISTRADOR`), estados (`PENDIENTE`, `APROBADA`, `RECHAZADA`, `CANCELADA`), códigos de error, campos JSON e identificadores del código. Solo se conservan en inglés las palabras clave estructurales que exige el analizador de OpenSpec (`Requirement`, `Scenario`, `SHALL`/`MUST`) y las APIs de Node.js y Express. | Decisión del estudiante durante la revisión de especificaciones (Fase 2), antes de escribir código: el equipo, la institución y la sustentación son hispanohablantes. |
+| 2.2 | **CR-01** solicitado por la institución: regla RN-13 (máximo 4 horas consecutivas por usuario y espacio). Se gestiona con el cambio OpenSpec `limitar-horas-consecutivas`. Impacto: un requisito nuevo en `solicitudes-reserva`; sin cambios de arquitectura, stack ni persistencia; la mitigación del riesgo R6 (regla aislada en una política, suite de regresión) se aplica según lo planificado. | Cambio de requisitos de la institución después de implementar las funcionalidades principales (Fase 4). |
