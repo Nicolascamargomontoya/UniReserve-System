@@ -10,10 +10,10 @@ context: |
   Fuente de verdad del alcance y las decisiones: PLAN_INGENIERIA.md (v2).
   Stack: Node.js >= 22.12, TypeScript strict, Express 5, JWT + bcryptjs,
   Vitest + Supertest. Arquitectura: monolito modular en capas; cada capacidad
-  de OpenSpec corresponde a src/modules/<capacidad>/ y a tests/<capacidad>.test.ts.
-  Roles: STUDENT, PROFESSOR (solicitantes) y ADMINISTRATOR.
-  Estados de reserva: PENDING, APPROVED, REJECTED, CANCELLED.
-  Las respuestas de error tienen la forma { error: { code, message, details? } }.
+  de OpenSpec corresponde a src/modulos/<capacidad>/ y a pruebas/<capacidad>.test.ts.
+  Roles: ESTUDIANTE, PROFESOR (solicitantes) y ADMINISTRADOR.
+  Estados de reserva: PENDIENTE, APROBADA, RECHAZADA, CANCELADA.
+  Las respuestas de error tienen la forma { error: { codigo, mensaje, detalles? } }.
 
 rules:
   specs:

@@ -2,7 +2,7 @@
 
 | Versión | Fecha | Estado |
 | :--- | :--- | :--- |
-| 2.0 | 2026-10-24 | Vigente. Reemplaza la versión 1.0 (commit `0bfde05`). Ver §7 *Control de cambios del plan*. |
+| 2.1 | 2026-10-24 | Vigente. Reemplaza las versiones 1.0 (commit `0bfde05`) y 2.0 (commit `be18ac8`). Ver §7 *Control de cambios del plan*. |
 
 Este documento se elabora **antes** de escribir especificaciones y código. Define qué problema se resuelve, cómo se organizará la solución, qué decisiones técnicas se toman (y por qué), cómo se asegurará la calidad y cómo se usarán OpenSpec y la inteligencia artificial.
 
@@ -37,9 +37,9 @@ La institución gestiona la reserva de laboratorios, auditorios y salas de cómp
 
 | Actor | Rol en el sistema | Interés principal |
 | :--- | :--- | :--- |
-| **Estudiante** | `STUDENT` (solicitante) | Consultar disponibilidad, solicitar, cancelar y ver sus reservas. |
-| **Profesor** | `PROFESSOR` (solicitante) | Igual que el estudiante. Se distingue para reportes y políticas futuras. |
-| **Administrador de espacios** | `ADMINISTRATOR` | Mantener el catálogo, decidir solicitudes, administrar usuarios y consultar todo el historial. |
+| **Estudiante** | `ESTUDIANTE` (solicitante) | Consultar disponibilidad, solicitar, cancelar y ver sus reservas. |
+| **Profesor** | `PROFESOR` (solicitante) | Igual que el estudiante. Se distingue para reportes y políticas futuras. |
+| **Administrador de espacios** | `ADMINISTRADOR` | Mantener el catálogo, decidir solicitudes, administrar usuarios y consultar todo el historial. |
 | **Sistema** | Actor no humano | Aplicar validaciones, impedir conflictos y registrar cada cambio de estado. |
 | **Dirección académica** | Interesado (no usa el sistema) | Define las reglas de negocio; puede introducir reglas nuevas durante el proyecto. |
 
@@ -47,7 +47,7 @@ La institución gestiona la reserva de laboratorios, auditorios y salas de cómp
 
 - API REST (JSON) que cubre los **8 módulos** de la §2.3.
 - Autenticación propia con correo y contraseña; autorización por rol.
-- Flujo completo: consulta de disponibilidad → solicitud (`PENDING`) → aprobación (`APPROVED`) o rechazo (`REJECTED`) → cancelación (`CANCELLED`) → historial.
+- Flujo completo: consulta de disponibilidad → solicitud (`PENDIENTE`) → aprobación (`APROBADA`) o rechazo (`RECHAZADA`) → cancelación (`CANCELADA`) → historial.
 - Prevención de conflictos por espacio y por usuario, incluso con solicitudes concurrentes.
 
 ### 1.5 Limitaciones y elementos fuera de alcance
@@ -73,13 +73,13 @@ Ciclo de vida propuesto para una reserva:
 
 ```mermaid
 stateDiagram-v2
-  [*] --> PENDING: solicitud válida
-  PENDING --> APPROVED: administrador aprueba
-  PENDING --> REJECTED: administrador rechaza (motivo obligatorio)
-  PENDING --> CANCELLED: cancelación antes del inicio
-  APPROVED --> CANCELLED: cancelación antes del inicio
-  REJECTED --> [*]
-  CANCELLED --> [*]
+  [*] --> PENDIENTE: solicitud válida
+  PENDIENTE --> APROBADA: administrador aprueba
+  PENDIENTE --> RECHAZADA: administrador rechaza (motivo obligatorio)
+  PENDIENTE --> CANCELADA: cancelación antes del inicio
+  APROBADA --> CANCELADA: cancelación antes del inicio
+  RECHAZADA --> [*]
+  CANCELADA --> [*]
 ```
 
 ### 2.2 Funcionalidades prioritarias (MoSCoW)
@@ -95,16 +95,16 @@ stateDiagram-v2
 
 Cada módulo corresponde a **una capacidad de OpenSpec**, a **una carpeta de código** y a **un archivo de pruebas**. Esta correspondencia uno a uno es la base de la trazabilidad.
 
-| # | Módulo | Responsabilidad | Capacidad OpenSpec / carpeta `src/modules/` | Pruebas |
+| # | Módulo | Responsabilidad | Capacidad OpenSpec / carpeta `src/modulos/` | Pruebas |
 | :--- | :--- | :--- | :--- | :--- |
-| M1 | Gestión de espacios académicos | Alta, edición, activación/desactivación y consulta del catálogo. | `space-management` | `tests/space-management.test.ts` |
-| M2 | Registro y administración de usuarios | Registro, autenticación, perfil, listado y activación/desactivación de cuentas. | `user-management` | `tests/user-management.test.ts` |
-| M3 | Roles y permisos | Roles, matriz de permisos, autenticación obligatoria, asignación de roles y administrador inicial. | `roles-permissions` | `tests/roles-permissions.test.ts` |
-| M4 | Creación de solicitudes de reserva | Recepción y validación de solicitudes (fechas, bloques, espacio, capacidad). | `reservation-requests` | `tests/reservation-requests.test.ts` |
-| M5 | Validación de disponibilidad | Definición de "disponible", consulta de ocupación y búsqueda de espacios libres. | `availability` | `tests/availability.test.ts` |
-| M6 | Prevención de reservas simultáneas | Exclusividad por espacio y por usuario, duplicados y concurrencia. | `conflict-prevention` | `tests/conflict-prevention.test.ts` |
-| M7 | Aprobación y rechazo de solicitudes | Bandeja de pendientes, aprobación, rechazo con motivo y transiciones válidas. | `reservation-approval` | `tests/reservation-approval.test.ts` |
-| M8 | Cancelación e historial de reservas | Cancelación, registro de cambios de estado e historial del solicitante y del administrador. | `cancellation-history` | `tests/cancellation-history.test.ts` |
+| M1 | Gestión de espacios académicos | Alta, edición, activación/desactivación y consulta del catálogo. | `gestion-espacios` | `pruebas/gestion-espacios.test.ts` |
+| M2 | Registro y administración de usuarios | Registro, autenticación, perfil, listado y activación/desactivación de cuentas. | `gestion-usuarios` | `pruebas/gestion-usuarios.test.ts` |
+| M3 | Roles y permisos | Roles, matriz de permisos, autenticación obligatoria, asignación de roles y administrador inicial. | `roles-permisos` | `pruebas/roles-permisos.test.ts` |
+| M4 | Creación de solicitudes de reserva | Recepción y validación de solicitudes (fechas, bloques, espacio, capacidad). | `solicitudes-reserva` | `pruebas/solicitudes-reserva.test.ts` |
+| M5 | Validación de disponibilidad | Definición de "disponible", consulta de ocupación y búsqueda de espacios libres. | `disponibilidad` | `pruebas/disponibilidad.test.ts` |
+| M6 | Prevención de reservas simultáneas | Exclusividad por espacio y por usuario, duplicados y concurrencia. | `prevencion-conflictos` | `pruebas/prevencion-conflictos.test.ts` |
+| M7 | Aprobación y rechazo de solicitudes | Bandeja de pendientes, aprobación, rechazo con motivo y transiciones válidas. | `aprobacion-reservas` | `pruebas/aprobacion-reservas.test.ts` |
+| M8 | Cancelación e historial de reservas | Cancelación, registro de cambios de estado e historial del solicitante y del administrador. | `cancelacion-historial` | `pruebas/cancelacion-historial.test.ts` |
 
 Los módulos se agrupan en tres subdominios: **Identidad** (M2, M3), **Catálogo** (M1) y **Reservas** (M4–M8).
 
@@ -116,14 +116,14 @@ Estas reglas son la entrada principal para las especificaciones (ver §6.2). Cad
 | :--- | :--- | :--- |
 | RN-01 | El nombre de un espacio es único (sin distinguir mayúsculas ni espacios en los extremos). | M1 |
 | RN-02 | Los espacios no se eliminan; se desactivan. Un espacio inactivo no recibe solicitudes nuevas. | M1 |
-| RN-03 | El autorregistro solo permite los roles `STUDENT` o `PROFESSOR`; `ADMINISTRATOR` lo asigna otro administrador. | M2, M3 |
+| RN-03 | El autorregistro solo permite los roles `ESTUDIANTE` o `PROFESOR`; `ADMINISTRADOR` lo asigna otro administrador. | M2, M3 |
 | RN-04 | Un administrador no puede cambiar su propio rol ni desactivar su propia cuenta (siempre existe al menos un administrador). | M3 |
 | RN-05 | Las fechas se expresan en ISO-8601 **con zona horaria**; las reservas usan bloques de 30 minutos. | M4 |
 | RN-06 | Solo se reserva a futuro, el fin es posterior al inicio y los asistentes no superan la capacidad. | M4 |
-| RN-07 | Toda solicitud nueva queda `PENDING`. Las reservas `PENDING` y `APPROVED` ("activas") ocupan la franja: atiende primero quien solicita primero. | M4, M5 |
+| RN-07 | Toda solicitud nueva queda `PENDIENTE`. Las reservas `PENDIENTE` y `APROBADA` ("activas") ocupan la franja: atiende primero quien solicita primero. | M4, M5 |
 | RN-08 | Los intervalos son semiabiertos `[inicio, fin)`: una reserva que termina a las 12:00 no choca con otra que empieza a las 12:00. | M5 |
 | RN-09 | Un espacio no puede tener dos reservas activas solapadas, y un usuario tampoco (aunque sean espacios distintos). | M6 |
-| RN-10 | Solo el administrador aprueba o rechaza; el rechazo exige motivo. Solo se decide sobre solicitudes `PENDING`. | M7 |
+| RN-10 | Solo el administrador aprueba o rechaza; el rechazo exige motivo. Solo se decide sobre solicitudes `PENDIENTE`. | M7 |
 | RN-11 | El solicitante cancela sus reservas activas antes del inicio; el administrador puede cancelar cualquiera, indicando motivo. | M8 |
 | RN-12 | Cada cambio de estado se registra (estado anterior, nuevo, autor, fecha y motivo) y no se puede modificar. | M8 |
 
@@ -158,7 +158,7 @@ Estas reglas son la entrada principal para las especificaciones (ver §6.2). Cad
  Transversal: modelos de dominio · errores tipados · reloj inyectable · mutex por clave
 ```
 
-**Reglas de dependencia:** la presentación solo llama a servicios; los servicios no conocen Express ni HTTP; los servicios solo acceden a datos mediante interfaces de repositorio; un *composition root* (`container`) conecta las implementaciones. Los módulos colaboran a través de sus servicios (por ejemplo, M4 usa los servicios de M5 y M6).
+**Reglas de dependencia:** la presentación solo llama a servicios; los servicios no conocen Express ni HTTP; los servicios solo acceden a datos mediante interfaces de repositorio; una raíz de composición (`contenedor.ts`) conecta las implementaciones. Los módulos colaboran a través de sus servicios (por ejemplo, M4 usa los servicios de M5 y M6).
 
 **Justificación:**
 
@@ -207,10 +207,10 @@ CREATE TABLE reservations (
   space_id   uuid NOT NULL REFERENCES spaces(id),
   user_id    uuid NOT NULL REFERENCES users(id),
   period     tstzrange NOT NULL,              -- intervalo semiabierto [inicio, fin)
-  status     text NOT NULL CHECK (status IN ('PENDING','APPROVED','REJECTED','CANCELLED')),
+  status     text NOT NULL CHECK (status IN ('PENDIENTE','APROBADA','RECHAZADA','CANCELADA')),
   purpose    text NOT NULL,
   attendees  int  NOT NULL CHECK (attendees > 0),
-  EXCLUDE USING gist (space_id WITH =, period WITH &&) WHERE (status IN ('PENDING','APPROVED'))
+  EXCLUDE USING gist (space_id WITH =, period WITH &&) WHERE (status IN ('PENDIENTE','APROBADA'))
 );
 ```
 
@@ -221,23 +221,23 @@ CREATE TABLE reservations (
 ```
 src/
 ├── app.ts                 # crea la aplicación Express a partir de dependencias
-├── server.ts              # arranque: configuración, administrador inicial, puerto
-├── config.ts              # lectura de variables de entorno
-├── container.ts           # composition root: repositorios → servicios
-├── domain/                # modelos y máquina de estados de la reserva
-├── shared/                # errores, validación, tiempo, reloj, mutex, middleware HTTP
-├── repositories/          # interfaces + adaptador en memoria
-└── modules/
-    ├── space-management/      (M1)  servicio + rutas
-    ├── user-management/       (M2)  servicio de usuarios, autenticación + rutas
-    ├── roles-permissions/     (M3)  matriz de permisos, middleware, roles, admin inicial
-    ├── reservation-requests/  (M4)
-    ├── availability/          (M5)
-    ├── conflict-prevention/   (M6)
-    ├── reservation-approval/  (M7)
-    └── cancellation-history/  (M8)
-tests/                     # un archivo por capacidad + pruebas unitarias
-scripts/trace.ts           # verificación automática de trazabilidad escenario → prueba
+├── servidor.ts            # arranque: configuración, administrador inicial, puerto
+├── configuracion.ts       # lectura de variables de entorno
+├── contenedor.ts          # raíz de composición: repositorios → servicios
+├── dominio/               # modelos y máquina de estados de la reserva
+├── compartido/            # errores, validación, tiempo, reloj, mutex, middleware HTTP
+├── repositorios/          # contratos + adaptador en memoria
+└── modulos/
+    ├── gestion-espacios/       (M1) servicio + rutas
+    ├── gestion-usuarios/       (M2) usuarios, autenticación + rutas
+    ├── roles-permisos/         (M3) matriz de permisos, middleware, roles, administrador inicial
+    ├── solicitudes-reserva/    (M4)
+    ├── disponibilidad/         (M5)
+    ├── prevencion-conflictos/  (M6)
+    ├── aprobacion-reservas/    (M7)
+    └── cancelacion-historial/  (M8)
+pruebas/                   # un archivo por capacidad + pruebas unitarias
+scripts/trazabilidad.ts    # verificación automática de trazabilidad escenario → prueba
 openspec/                  # configuración, especificaciones vigentes y cambios
 ```
 
@@ -252,7 +252,7 @@ openspec/                  # configuración, especificaciones vigentes y cambios
 | DT-05 | **JWT de corta duración + consulta del usuario en cada petición** | Sesiones en servidor; JWT puro (confiar en el rol del token). | El JWT puro mantendría permisos obsoletos tras un cambio de rol o una desactivación. Las sesiones requieren almacén compartido. La consulta por petición es barata y aplica los cambios de inmediato. |
 | DT-06 | **Mutex por clave (espacio, usuario) en la capa de negocio** | No controlar la concurrencia (confiar en el event loop); bloqueo optimista con versión. | En cuanto el repositorio haga E/S real, dos peticiones pueden intercalarse entre la verificación y la escritura. El bloqueo optimista requiere reintentos y no expresa "intervalo libre". El mutex es simple y verificable con pruebas de concurrencia. |
 | DT-07 | **Vitest + Supertest** | Jest + ts-jest; script manual con `console.log` (iteración 1). | Vitest ejecuta TypeScript sin compilador adicional y es compatible con la API de Jest. Un script manual no aísla casos, no reporta cobertura y se detiene en el primer fallo. |
-| DT-08 | **`PENDING` ocupa la franja (primero en llegar, primero en ser atendido)** | Solo `APPROVED` ocupa la franja (iteración 1). | Si solo `APPROVED` bloquea, dos solicitudes pendientes del mismo horario pueden aprobarse ambas (doble reserva) y reaparece la duplicidad que se quiere eliminar. |
+| DT-08 | **`PENDIENTE` ocupa la franja (primero en llegar, primero en ser atendido)** | Solo `APROBADA` ocupa la franja (iteración 1). | Si solo `APROBADA` bloquea, dos solicitudes pendientes del mismo horario pueden aprobarse ambas (doble reserva) y reaparece la duplicidad que se quiere eliminar. |
 | DT-09 | **Intervalos semiabiertos `[inicio, fin)` y bloques de 30 minutos** | Intervalos cerrados; minutos libres. | Con intervalos cerrados, dos clases consecutivas (10–12 y 12–14) "chocarían". Los bloques de 30 minutos normalizan las franjas y simplifican la consulta de ocupación. |
 
 ---
@@ -266,7 +266,7 @@ openspec/                  # configuración, especificaciones vigentes y cambios
 1. **Proponer** (`openspec new change`): `proposal.md` (por qué y qué), especificaciones delta (`ADDED`/`MODIFIED`/`REMOVED`), `design.md` (cómo) y `tasks.md` (pasos verificables).
 2. **Revisar**: checklist de la §5.3; `openspec validate --strict`; registro en `review.md`.
 3. **Implementar**: tareas en orden, con la IA como asistente; commit por incremento.
-4. **Verificar**: `npm run verify` (tipos, especificaciones, pruebas con cobertura, trazabilidad).
+4. **Verificar**: `npm run verificar` (tipos, especificaciones, pruebas con cobertura, trazabilidad).
 5. **Archivar** (`openspec archive`): las especificaciones delta pasan a `openspec/specs/`.
 
 ### 4.2 Etapas de implementación
@@ -313,7 +313,7 @@ flowchart LR
 - **Revisión:** checklist aplicado, ambigüedades y contradicciones resueltas y registradas; tareas definidas con su forma de verificación.
 - **Incremento:** tareas marcadas en `tasks.md`; cada escenario del incremento tiene una prueba con el mismo nombre y pasa; `tsc` sin errores; suite completa en verde (sin regresiones); commit.
 - **Cambio:** propuesta con análisis de impacto; especificación delta validada **antes** del código; pruebas nuevas y suite completa en verde; cambio archivado.
-- **Cierre:** `npm run verify` en verde; cobertura de líneas ≥ 85 %; matriz de trazabilidad sin escenarios sin prueba; documentación consolidada.
+- **Cierre:** `npm run verificar` en verde; cobertura de líneas ≥ 85 %; matriz de trazabilidad sin escenarios sin prueba; documentación consolidada.
 
 ---
 
@@ -328,13 +328,13 @@ flowchart LR
 | **Concurrencia** | Solicitudes simultáneas sobre la misma franja: exactamente una gana. Se usa un repositorio con latencia artificial para forzar el intercalado. | Vitest |
 | **Regresión** | La suite completa se ejecuta en cada incremento y cambio. | `npm test` |
 | **Estáticas** | Tipos estrictos y formato de especificaciones. | `tsc --noEmit`, `openspec validate --strict` |
-| **Trazabilidad** | Falla si algún escenario de las especificaciones no tiene prueba. | `npm run trace` |
+| **Trazabilidad** | Falla si algún escenario de las especificaciones no tiene prueba. | `npm run trazabilidad` |
 
 ### 5.2 Riesgos y estrategias de mitigación
 
 | ID | Riesgo | Prob. | Impacto | Mitigación | Verificación |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| R1 | Doble reserva por solicitudes concurrentes o por aprobar dos pendientes solapadas. | Alta | Alto | DT-06 (mutex), DT-08 (`PENDING` bloquea), revalidación al aprobar; restricción de exclusión en producción. | Pruebas de concurrencia y de revalidación. |
+| R1 | Doble reserva por solicitudes concurrentes o por aprobar dos pendientes solapadas. | Alta | Alto | DT-06 (mutex), DT-08 (`PENDIENTE` bloquea), revalidación al aprobar; restricción de exclusión en producción. | Pruebas de concurrencia y de revalidación. |
 | R2 | La IA implementa funcionalidad no especificada o incorrecta. | Media | Alto | Especificaciones revisadas antes del código; cada tarea cita su requisito; revisión humana del diff; pruebas por escenario. | Trazabilidad automática; checklist §6.4. |
 | R3 | Requisitos ambiguos (zona horaria, reservas contiguas, quién puede cancelar). | Alta | Medio | Revisión formal de especificaciones; escenarios con valores concretos. | `review.md` con hallazgos y resoluciones. |
 | R4 | Escalamiento de privilegios (autorregistro como administrador, permisos obsoletos en el token). | Media | Alto | RN-03; rol leído del almacén en cada petición (DT-05); secreto JWT por variable de entorno. | Pruebas de roles y permisos. |
@@ -345,8 +345,8 @@ flowchart LR
 
 ### 5.3 Mecanismos para verificar el cumplimiento de requisitos
 
-1. **Matriz de trazabilidad** requisito → escenario → prueba → módulo, generada por `scripts/trace.ts` a partir de las especificaciones y las pruebas; falla si falta alguna prueba.
-2. **`npm run verify`** como puerta de calidad: tipos + especificaciones + pruebas con cobertura + trazabilidad.
+1. **Matriz de trazabilidad** requisito → escenario → prueba → módulo, generada por `scripts/trazabilidad.ts` a partir de las especificaciones y las pruebas; falla si falta alguna prueba.
+2. **`npm run verificar`** como puerta de calidad: tipos + especificaciones + pruebas con cobertura + trazabilidad.
 3. **Checklist de revisión de especificaciones:** ¿cada requisito usa `SHALL`/`MUST` y es observable? ¿Cada escenario tiene valores concretos y un resultado verificable (código HTTP, código de error, estado)? ¿Hay contradicciones entre capacidades? ¿Cada regla de la §2.4 está cubierta?
 4. **Checklist de revisión de código** (§6.4).
 
@@ -357,7 +357,7 @@ flowchart LR
 ### 6.1 ¿Cómo se utilizará OpenSpec?
 
 - `openspec init --tools claude --language es`: crea `openspec/config.yaml` y los comandos del agente (`/opsx:propose`, `/opsx:apply`, `/opsx:archive`).
-- Un **cambio** por unidad de alcance: `add-core-reservation-system` para los 8 módulos y un cambio adicional por cada regla que solicite la institución.
+- Un **cambio** por unidad de alcance: `crear-sistema-reservas` para los 8 módulos y un cambio adicional por cada regla que solicite la institución.
 - Artefactos de cada cambio: `proposal.md`, `specs/<capacidad>/spec.md` (delta), `design.md`, `tasks.md` y `review.md`.
 - `openspec validate --strict` como compuerta antes de implementar; `openspec archive` para consolidar las especificaciones vigentes en `openspec/specs/`.
 
@@ -367,7 +367,7 @@ flowchart LR
 | :--- | :--- |
 | Necesidades N1–N8 y módulos M1–M8 (§1.2, §2.3) | Una **capacidad** (spec) por módulo, con su `Purpose`. |
 | Reglas de negocio RN-01…RN-12 (§2.4) | **Requisitos** `SHALL`/`MUST`; al menos un escenario de éxito y uno de fallo por regla. |
-| Actores y permisos (§1.3) | Requisitos de `roles-permissions` y escenarios de acceso denegado. |
+| Actores y permisos (§1.3) | Requisitos de `roles-permisos` y escenarios de acceso denegado. |
 | Riesgos (§5.2) | Requisitos y escenarios explícitos (concurrencia, autorregistro, fechas sin zona). |
 | Arquitectura y decisiones (§3) | `design.md` del cambio. |
 | Incrementos y dependencias (§2.5, §4.3) | `tasks.md`, agrupado por incremento y en orden de dependencias. |
@@ -393,7 +393,7 @@ Se usa un agente de programación (Claude Code) para:
 ### 6.5 Decisiones bajo responsabilidad del estudiante
 
 - Alcance, limitaciones y arquitectura (§1, §3).
-- Reglas de negocio e interpretación de requisitos ambiguos (§2.4), por ejemplo que `PENDING` ocupe la franja o los bloques de 30 minutos.
+- Reglas de negocio e interpretación de requisitos ambiguos (§2.4), por ejemplo que `PENDIENTE` ocupe la franja o los bloques de 30 minutos.
 - Aprobación de las especificaciones y de cada incremento de código.
 - Decisiones de seguridad (roles, secretos, exposición de datos).
 - Análisis de impacto de los cambios solicitados por la institución.
@@ -409,5 +409,6 @@ Se usa un agente de programación (Claude Code) para:
 | 2.0 | Los 8 módulos exigidos quedan explícitos y alineados 1:1 con capacidades, carpetas y pruebas. | La v1 agrupaba funcionalidades y no permitía rastrear cada una. |
 | 2.0 | Se retira el módulo de notificaciones del alcance. | No es requisito mínimo; el estado se consulta en el historial. |
 | 2.0 | Persistencia: repositorio en memoria en la entrega y PostgreSQL como destino documentado (DT-04). | Ejecución sin infraestructura; la v1 prometía PostgreSQL pero la iteración 1 no lo implementó. |
-| 2.0 | Nuevas reglas RN-03, RN-04, RN-05, RN-07, RN-08, RN-09, RN-12 y decisiones DT-05 a DT-09. | La revisión de la iteración 1 encontró: doble reserva posible (solo `APPROVED` bloqueaba y la aprobación no revalidaba), autorregistro como administrador, secreto JWT fijo en el código, especificaciones fuera del formato OpenSpec, pruebas sin framework y funcionalidades faltantes (rechazo, cancelación, historial, administración de usuarios). |
-| 2.0 | Estrategia de calidad con trazabilidad automatizada y `npm run verify`. | Hacer verificable el cumplimiento de requisitos. |
+| 2.0 | Nuevas reglas RN-03, RN-04, RN-05, RN-07, RN-08, RN-09, RN-12 y decisiones DT-05 a DT-09. | La revisión de la iteración 1 encontró: doble reserva posible (solo `APROBADA` bloqueaba y la aprobación no revalidaba), autorregistro como administrador, secreto JWT fijo en el código, especificaciones fuera del formato OpenSpec, pruebas sin framework y funcionalidades faltantes (rechazo, cancelación, historial, administración de usuarios). |
+| 2.0 | Estrategia de calidad con trazabilidad automatizada y `npm run verificar`. | Hacer verificable el cumplimiento de requisitos. |
+| 2.1 | Todo el proyecto en español: capacidades de OpenSpec, carpetas (`src/modulos/`, `pruebas/`), rutas de la API (`/espacios`, `/reservas`, `/usuarios`), roles (`ESTUDIANTE`, `PROFESOR`, `ADMINISTRADOR`), estados (`PENDIENTE`, `APROBADA`, `RECHAZADA`, `CANCELADA`), códigos de error, campos JSON e identificadores del código. Solo se conservan en inglés las palabras clave estructurales que exige el analizador de OpenSpec (`Requirement`, `Scenario`, `SHALL`/`MUST`) y las APIs de Node.js y Express. | Decisión del estudiante durante la revisión de especificaciones (Fase 2), antes de escribir código: el equipo, la institución y la sustentación son hispanohablantes. |

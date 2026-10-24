@@ -14,20 +14,20 @@ Las reservas por correo y hoja de cálculo generan solicitudes duplicadas, doble
 - Prevención de reservas simultáneas por espacio y por usuario, detección de duplicados y garantía ante solicitudes concurrentes.
 - Bandeja de pendientes, aprobación y rechazo con motivo y transiciones de estado válidas.
 - Cancelación por el solicitante o el administrador, registro inmutable de cambios de estado e historial consultable.
-- **BREAKING** respecto a la iteración 1: rutas, nombres de estados (`PENDING`, `APPROVED`, `REJECTED`, `CANCELLED`), roles (`STUDENT`, `PROFESSOR`, `ADMINISTRATOR`) y formato de error `{ error: { code, message } }`. No hay datos que migrar (persistencia en memoria).
+- **BREAKING** respecto a la iteración 1: rutas, nombres de estados (`PENDIENTE`, `APROBADA`, `RECHAZADA`, `CANCELADA`), roles (`ESTUDIANTE`, `PROFESOR`, `ADMINISTRADOR`) y formato de error `{ error: { codigo, mensaje } }`. No hay datos que migrar (persistencia en memoria).
 
 ## Capabilities
 
 ### New Capabilities
 
-- `space-management`: alta, edición, activación/desactivación y consulta del catálogo de espacios (M1).
-- `user-management`: registro, autenticación, perfil propio y administración de cuentas (M2).
-- `roles-permissions`: roles, permisos por rol, autenticación obligatoria, asignación de roles y administrador inicial (M3).
-- `reservation-requests`: creación y validación de solicitudes de reserva (M4).
-- `availability`: definición de disponibilidad, consulta de ocupación y búsqueda de espacios libres (M5).
-- `conflict-prevention`: exclusividad por espacio y por usuario, duplicados y concurrencia (M6).
-- `reservation-approval`: bandeja de pendientes, aprobación, rechazo y transiciones válidas (M7).
-- `cancellation-history`: cancelación, registro de cambios de estado e historial (M8).
+- `gestion-espacios`: alta, edición, activación/desactivación y consulta del catálogo de espacios (M1).
+- `gestion-usuarios`: registro, autenticación, perfil propio y administración de cuentas (M2).
+- `roles-permisos`: roles, permisos por rol, autenticación obligatoria, asignación de roles y administrador inicial (M3).
+- `solicitudes-reserva`: creación y validación de solicitudes de reserva (M4).
+- `disponibilidad`: definición de disponibilidad, consulta de ocupación y búsqueda de espacios libres (M5).
+- `prevencion-conflictos`: exclusividad por espacio y por usuario, duplicados y concurrencia (M6).
+- `aprobacion-reservas`: bandeja de pendientes, aprobación, rechazo y transiciones válidas (M7).
+- `cancelacion-historial`: cancelación, registro de cambios de estado e historial (M8).
 
 ### Modified Capabilities
 
@@ -35,7 +35,7 @@ Ninguna: `openspec/specs/` está vacío. Las especificaciones de la iteración 1
 
 ## Impact
 
-- **Código:** reemplaza `src/` de la iteración 1 por la estructura modular del plan (`src/modules/<capacidad>/`).
-- **API:** nuevas rutas bajo `/auth`, `/users`, `/spaces` y `/reservations` (ver `design.md`).
+- **Código:** reemplaza `src/` de la iteración 1 por la estructura modular del plan (`src/modulos/<capacidad>/`).
+- **API:** nuevas rutas bajo `/auth`, `/usuarios`, `/espacios` y `/reservas` (ver `design.md`).
 - **Dependencias:** se retiran `pg`, `uuid`, `ts-node` y `nodemon`; se agregan Vitest, Supertest y tsx.
-- **Pruebas:** el script manual `tests/system_test.ts` se reemplaza por una suite automatizada con un archivo por capacidad.
+- **Pruebas:** el script manual `tests/system_test.ts` se reemplaza por una suite automatizada en `pruebas/` con un archivo por capacidad.
