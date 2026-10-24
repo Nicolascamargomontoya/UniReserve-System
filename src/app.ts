@@ -1,6 +1,8 @@
 import express, { type Express } from 'express';
 import type { Contenedor } from './contenedor.js';
 import { manejadorDeErrores, rutaNoEncontrada } from './compartido/http.js';
+import { rutasAprobacion } from './modulos/aprobacion-reservas/rutas-aprobacion.js';
+import { rutasHistorial } from './modulos/cancelacion-historial/rutas-historial.js';
 import { rutasDisponibilidad } from './modulos/disponibilidad/rutas-disponibilidad.js';
 import { rutasEspacios } from './modulos/gestion-espacios/rutas-espacios.js';
 import { rutasAutenticacion, rutasUsuarios } from './modulos/gestion-usuarios/rutas-usuarios.js';
@@ -23,6 +25,8 @@ export function crearApp({ servicios }: Contenedor): Express {
   app.use(rutasDisponibilidad(servicios)); // antes que rutasEspacios: /espacios/disponibles
   app.use(rutasEspacios(servicios));
   app.use(rutasSolicitudes(servicios));
+  app.use(rutasAprobacion(servicios)); // antes que rutasHistorial: /reservas/pendientes
+  app.use(rutasHistorial(servicios));
 
   app.use(rutaNoEncontrada);
   app.use(manejadorDeErrores);

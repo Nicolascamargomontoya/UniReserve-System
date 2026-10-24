@@ -133,6 +133,18 @@ describe('gestion-espacios › Activación y desactivación de espacios', () => 
     expect(nombres(catalogo.body)).not.toContain('Auditorio Central');
   });
 
+  it('Las reservas existentes se conservan', async () => {
+    const entorno = await crearEntornoDePrueba();
+    const estudiante = await entorno.registrar('ESTUDIANTE');
+    const auditorio = await entorno.crearEspacio({ nombre: 'Auditorio Central', tipo: 'AUDITORIO', capacidad: 200 });
+    const reserva = (await entorno.solicitar(estudiante.token, { espacioId: auditorio.id })).body;
+    await entorno.admin.patch(`/reservas/${reserva.id}/aprobar`);
+
+    await entorno.admin.patch(`/espacios/${auditorio.id}/estado`, { activo: false });
+
+    expect((await entorno.admin.get(`/reservas/${reserva.id}`)).body.estado).toBe('APROBADA');
+  });
+
   it('Reactivar un espacio', async () => {
     const entorno = await crearEntornoDePrueba();
     const estudiante = await entorno.registrar('ESTUDIANTE');

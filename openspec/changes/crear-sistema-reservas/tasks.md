@@ -41,12 +41,12 @@ Cada tarea indica el requisito que implementa y cómo se verifica. Un grupo se c
 
 ## 5. Gestión y trazabilidad (Incremento 4): aprobacion-reservas y cancelacion-historial
 
-- [ ] 5.1 Bandeja de pendientes en orden de llegada (Bandeja de solicitudes pendientes); verificar con su escenario en `pruebas/aprobacion-reservas.test.ts`.
-- [ ] 5.2 Aprobación con revalidación (Aprobación de solicitudes; prevencion-conflictos: Revalidación al aprobar); verificar con sus escenarios y con "Las reservas existentes se conservan" de gestion-espacios.
-- [ ] 5.3 Rechazo con motivo y transiciones de decisión válidas; verificar con sus escenarios.
-- [ ] 5.4 Cancelación por el solicitante y administrativa; verificar con sus escenarios en `pruebas/cancelacion-historial.test.ts`.
-- [ ] 5.5 Registro inmutable de cambios de estado, historial del solicitante y consulta administrativa; verificar con sus escenarios.
-- [ ] 5.6 roles-permisos: escenarios restantes (profesor intenta aprobar, administrador consulta todas las reservas, promoción a administrador); verificar con sus pruebas.
+- [x] 5.1 Bandeja de pendientes en orden de llegada (Bandeja de solicitudes pendientes); verificar con su escenario en `pruebas/aprobacion-reservas.test.ts`.
+- [x] 5.2 Aprobación con revalidación (Aprobación de solicitudes; prevencion-conflictos: Revalidación al aprobar); verificar con sus escenarios y con "Las reservas existentes se conservan" de gestion-espacios.
+- [x] 5.3 Rechazo con motivo y transiciones de decisión válidas; verificar con sus escenarios.
+- [x] 5.4 Cancelación por el solicitante y administrativa; verificar con sus escenarios en `pruebas/cancelacion-historial.test.ts`.
+- [x] 5.5 Registro inmutable de cambios de estado, historial del solicitante y consulta administrativa; verificar con sus escenarios.
+- [x] 5.6 roles-permisos: escenarios restantes (profesor intenta aprobar, administrador consulta todas las reservas, promoción a administrador); verificar con sus pruebas.
 
 ## 6. Verificación integral
 

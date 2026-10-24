@@ -34,10 +34,14 @@ interface OpcionesEntorno extends Partial<OpcionesContenedor> {
   sembrarAdministrador?: boolean;
 }
 
+// Los tokens de prueba duran 24 h para que los escenarios puedan adelantar el reloj durante el día;
+// el escenario "Token expirado" usa explícitamente la duración por defecto de 1 h.
+export const CONFIGURACION_DE_PRUEBA = { jwtSecreto: 'secreto-de-pruebas', jwtDuracionSegundos: 24 * 3600, rondasBcrypt: 4 };
+
 export async function crearEntornoDePrueba({ sembrarAdministrador = true, ...opciones }: OpcionesEntorno = {}) {
   const reloj = new RelojFalso(AHORA);
   const contenedor = crearContenedor({
-    configuracion: { jwtSecreto: 'secreto-de-pruebas', jwtDuracionSegundos: 3600, rondasBcrypt: 4 },
+    configuracion: CONFIGURACION_DE_PRUEBA,
     reloj: reloj.ahora,
     ...opciones,
   });

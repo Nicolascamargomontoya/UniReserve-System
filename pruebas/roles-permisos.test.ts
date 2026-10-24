@@ -1,6 +1,6 @@
 // Escenarios de openspec: roles-permisos (M3 — Roles y permisos).
 import { describe, expect, it } from 'vitest';
-import { crearEntornoDePrueba } from './apoyo/app-de-prueba.js';
+import { CONFIGURACION_DE_PRUEBA, crearEntornoDePrueba } from './apoyo/app-de-prueba.js';
 
 describe('roles-permisos › Roles del sistema', () => {
   it('Cada cuenta tiene un único rol', async () => {
@@ -41,7 +41,39 @@ describe('roles-permisos › Permisos de los solicitantes', () => {
   });
 });
 
+describe('roles-permisos › Permisos de los solicitantes (decisiones)', () => {
+  it('Un profesor intenta aprobar una solicitud', async () => {
+    const entorno = await crearEntornoDePrueba();
+    const estudiante = await entorno.registrar('ESTUDIANTE');
+    const profesor = await entorno.registrar('PROFESOR');
+    const lab = await entorno.crearEspacio({ nombre: 'Lab 1' });
+    const solicitud = (await entorno.solicitar(estudiante.token, { espacioId: lab.id })).body;
+
+    const respuesta = await entorno.como(profesor.token).patch(`/reservas/${solicitud.id}/aprobar`);
+
+    expect(respuesta.status).toBe(403);
+    expect(respuesta.body.error.codigo).toBe('ACCESO_DENEGADO');
+    expect((await entorno.admin.get(`/reservas/${solicitud.id}`)).body.estado).toBe('PENDIENTE');
+  });
+
+  it('un estudiante no puede consultar todas las reservas ni un administrador las propias', async () => {
+    const entorno = await crearEntornoDePrueba();
+    const estudiante = await entorno.registrar('ESTUDIANTE');
+
+    expect((await entorno.como(estudiante.token).get('/reservas')).status).toBe(403);
+    expect((await entorno.admin.get('/reservas/mias')).status).toBe(403);
+  });
+});
+
 describe('roles-permisos › Permisos del administrador', () => {
+  it('El administrador consulta todas las reservas', async () => {
+    const entorno = await crearEntornoDePrueba();
+
+    const respuesta = await entorno.admin.get('/reservas');
+
+    expect(respuesta.status).toBe(200);
+  });
+
   it('El administrador intenta crear una solicitud', async () => {
     const entorno = await crearEntornoDePrueba();
     const lab = await entorno.crearEspacio({ nombre: 'Lab 1' });
@@ -76,7 +108,7 @@ describe('roles-permisos › Autenticación obligatoria', () => {
   });
 
   it('Token expirado', async () => {
-    const entorno = await crearEntornoDePrueba();
+    const entorno = await crearEntornoDePrueba({ configuracion: { ...CONFIGURACION_DE_PRUEBA, jwtDuracionSegundos: 3600 } });
     const estudiante = await entorno.registrar('ESTUDIANTE');
 
     entorno.reloj.fijar('2030-01-07T09:00:01Z');
@@ -88,6 +120,17 @@ describe('roles-permisos › Autenticación obligatoria', () => {
 });
 
 describe('roles-permisos › Asignación de roles', () => {
+  it('Promover un estudiante a administrador', async () => {
+    const entorno = await crearEntornoDePrueba();
+    const estudiante = await entorno.registrar('ESTUDIANTE');
+    expect((await entorno.como(estudiante.token).get('/reservas')).status).toBe(403);
+
+    await entorno.admin.patch(`/usuarios/${estudiante.usuario.id}/rol`, { rol: 'ADMINISTRADOR' });
+    const respuesta = await entorno.como(estudiante.token).get('/reservas');
+
+    expect(respuesta.status).toBe(200);
+  });
+
   it('Asignar un rol inexistente', async () => {
     const entorno = await crearEntornoDePrueba();
     const estudiante = await entorno.registrar('ESTUDIANTE');

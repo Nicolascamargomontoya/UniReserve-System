@@ -4,6 +4,9 @@ import { MutexPorClave, type Exclusion } from './compartido/mutex-por-clave.js';
 import { relojDelSistema, type Reloj } from './compartido/reloj.js';
 import type { Repositorios } from './repositorios/contratos.js';
 import { crearRepositoriosEnMemoria } from './repositorios/en-memoria.js';
+import { ServicioAprobacion } from './modulos/aprobacion-reservas/servicio-aprobacion.js';
+import { ServicioCancelacion } from './modulos/cancelacion-historial/servicio-cancelacion.js';
+import { ServicioHistorial } from './modulos/cancelacion-historial/servicio-historial.js';
 import { ServicioDisponibilidad } from './modulos/disponibilidad/servicio-disponibilidad.js';
 import { ServicioEspacios } from './modulos/gestion-espacios/servicio-espacios.js';
 import { HashContrasenas } from './modulos/gestion-usuarios/hash-contrasenas.js';
@@ -43,11 +46,16 @@ export function crearContenedor(opciones: OpcionesContenedor) {
   const guardia = new GuardiaConflictos(repositorios.reservas, exclusion);
   // M4 — Solicitudes de reserva
   const solicitudes = new ServicioSolicitudes(repositorios.reservas, espacios, disponibilidad, guardia, reloj);
+  // M7 — Aprobación y rechazo
+  const aprobacion = new ServicioAprobacion(repositorios.reservas, repositorios.usuarios, espacios, guardia, reloj);
+  // M8 — Cancelación e historial
+  const cancelacion = new ServicioCancelacion(repositorios.reservas, guardia, reloj);
+  const historial = new ServicioHistorial(repositorios.reservas);
 
   return {
     reloj,
     repositorios,
-    servicios: { usuarios, autenticacion, roles, espacios, disponibilidad, guardia, solicitudes },
+    servicios: { usuarios, autenticacion, roles, espacios, disponibilidad, guardia, solicitudes, aprobacion, cancelacion, historial },
   };
 }
 
